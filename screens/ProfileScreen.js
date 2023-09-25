@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
@@ -7,18 +7,15 @@ import {
   ImageBackground,
   Image,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import DeleteSvg from "../assets/images/delete.svg";
 import LogOutSvg from "../assets/images/log-out.svg";
 import AvatarImage from "../assets/images/avatar.png";
 
-const initialState = {
-  login: "",
-  email: "",
-  password: "",
-};
+export default function ProfileScreen() {
+  const navigation = useNavigation();
 
-export default function RegistrationScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
@@ -26,7 +23,12 @@ export default function RegistrationScreen() {
           <Image style={styles.avatar} source={AvatarImage} />
           {/* <AddSvg style={styles.addIcon} width={25} height={25} /> */}
           <DeleteSvg style={styles.deleteIcon} width={37} height={37} />
-          <LogOutSvg style={styles.logOutIcon} />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <LogOutSvg style={styles.logOutIcon} />
+          </TouchableOpacity>
         </View>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Natali Romanova</Text>
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
   deleteIcon: {
     position: "absolute",
     right: 128,
-    top: 18,
+    top: 16,
   },
   logOutIcon: {
     position: "absolute",

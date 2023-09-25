@@ -9,6 +9,7 @@ import LogOutSvg from "../assets/images/log-out.svg";
 import GridSvg from "../assets/images/grid.svg";
 import UserSvg from "../assets/images/user.svg";
 import UnionSvg from "../assets/images/union.svg";
+import ArrowSvg from "../assets/images/arrow-left.svg";
 
 const Tabs = createBottomTabNavigator();
 
@@ -56,11 +57,13 @@ export default function Home() {
             fontSize: 17,
           },
           headerRight: () => (
-            <LogOutSvg
-              style={{ position: "absolute", right: 10, bottom: 10 }}
-              width={25}
-              height={25}
-            />
+            <TouchableOpacity
+              style={{ position: "relative" }}
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate("Login")}
+            >
+              <LogOutSvg style={styles.logOutSvg} width={25} height={25} />
+            </TouchableOpacity>
           ),
         }}
       />
@@ -74,6 +77,15 @@ export default function Home() {
           headerTitleStyle: {
             fontSize: 17,
           },
+          headerRight: () => (
+            <TouchableOpacity
+              style={{ position: "relative" }}
+              activeOpacity={0.8}
+              onPress={() => navigation.goBack()}
+            >
+              <ArrowSvg style={styles.arrowSvg} width={25} height={25} />
+            </TouchableOpacity>
+          ),
         }}
       />
       <Tabs.Screen
@@ -98,5 +110,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF6C00",
     width: 70,
     height: 40,
+  },
+  logOutSvg: {
+    position: "absolute",
+    right: 16,
+    top: -16,
+  },
+  arrowSvg: {
+    position: "absolute",
+    left: -370,
+    top: -12,
   },
 });
