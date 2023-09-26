@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -7,70 +8,144 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
 import PhotoSvg from "../assets/images/photo.svg";
+import TrashSvg from "../assets/images/trash.svg";
+import MagPinSvg from "../assets/images/map-pin.svg";
 
 export default function CreatePostsScreen() {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [photo, setPhoto] = useState(null);
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState(null);
+
+  const navigation = useNavigation();
+
+  // const sendPhoto = () => {};
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  useEffect(() => {
+    async () => {
+      let { status } = await Location.requestBackgroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+    };
+  });
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+
+  if (hasPermission === false) {
+    return <Text>No access to camera </Text>;
+  }
+
   return (
     <View style={styles.container}>
-      <View style={styles.photoWrapper}>
-        <Image style={styles.photo} />
-        <Text style={styles.photoTitle}>Завантажте фото</Text>
-        {/* <DeleteSvg style={styles.deleteIcon} width={37} height={37} />  */}
-        <View style={styles.iconWrapper}>
-          <PhotoSvg fill={"#BDBDBD"} width={24} height={24} />
-        </View>
-      </View>
-      {/* <View style={styles.header}> */}
+      <Camera style={styles.camera} type={type} ref={setCameraRef}>
+        {photo && (
+          <View style={styles.takePhotoContainer}>
+            <Image
+              source={{ uri: photo }}
+              style={{ height: 200, width: 200 }}
+            />
+          </View>
+        )}
 
-      {/* </View>  */}
-      <View style={styles.wrapper}></View>
+        <View style={styles.photoView}>
+          <TouchableOpacity
+            style={{
+              ...styles.iconWrapper,
+              backgroundColor: photo ? "rgba(225,225,225,0.3)" : "#FFF",
+            }}
+            onPress={async () => {
+              // console.log(cameraRef);
+              if (cameraRef) {
+                const { uri } = await cameraRef.takePictureAsync();
+                const location = await Location.getCurrentPositionAsync();
+
+                await MediaLibrary.createAssetAsync(uri);
+                console.log("location", location);
+                setPhoto(uri);
+              }
+            }}
+          >
+            <PhotoSvg
+              fill={photo ? "#FFF" : "#BDBDBD"}
+              width={24}
+              height={24}
+            />
+            {/* </View> */}
+          </TouchableOpacity>
+        </View>
+      </Camera>
+
+      {/* <View style={styles.photoWrapper}> */}
+      {/* <Image style={styles.photo} /> */}
+      <Text style={styles.photoTitle}>
+        {photo ? "Редагувати фото" : "Завантажте фото"}
+      </Text>
+      {/* <View style={styles.iconWrapper}>
+        <PhotoSvg fill={"#BDBDBD"} width={24} height={24} />
+      </View> */}
+      {/* </View> */}
+
       <View style={styles.form}>
-        {/* <View style={styles.header}>
-          <Text style={styles.headerTitle}>Увійти</Text>
-        </View> */}
         <View>
           <TextInput
             style={{
               ...styles.input,
-              // borderColor: hasFocusEmail ? "#FF6C00" : "#E8E8E8",
+              fontFamily: "Roboto-Medium",
             }}
             placeholder="Назва..."
             placeholderTextColor={"#BDBDBD"}
-            // value={state.email}
-            // onFocus={() => handleFocusEmail()}
-            // onBlur={() => setHasFocusEmail(false)}
-            // onChangeText={(value) =>
-            //   setState((prevState) => ({ ...prevState, email: value }))
-            // }
+            onChangeText={(value) => setName(value)}
           />
         </View>
         <View style={{ marginTop: 16, position: "relative" }}>
           <TextInput
             style={{
               ...styles.input,
-              // borderColor: hasFocusPassword ? "#FF6C00" : "#E8E8E8",
+              paddingLeft: 28,
             }}
             placeholder="Місцевість.."
             placeholderTextColor={"#BDBDBD"}
-            // value={state.password}
-            // onFocus={() => handleFocusPassword()}
-            // onBlur={() => setHasFocusPassword(false)}
-            // onChangeText={(value) =>
-            //   setState((prevState) => ({
-            //     ...prevState,
-            //     password: value,
-            //   }))
-            // }
-            // secureTextEntry={!showPassword}
           />
         </View>
+        <MagPinSvg style={styles.magPinSvg} />
         <TouchableOpacity
-          style={styles.btn}
+          style={{
+            ...styles.btn,
+            backgroundColor: photo ? "#FF6C00" : "#F6F6F6",
+          }}
           activeOpacity={0.8}
-          // onPress={handleSubmit}
+          onPress={() => {
+            navigation.navigate("Posts", { photo, name });
+          }}
         >
-          <Text style={styles.btnTitle}>Опубліковати</Text>
+          <Text
+            style={{ ...styles.btnTitle, color: photo ? "#FFF" : "#BDBDBD" }}
+          >
+            Опубліковати
+          </Text>
         </TouchableOpacity>
+
+        <View style={styles.trashSvgWrapper}>
+          <TrashSvg />
+        </View>
       </View>
     </View>
   );
@@ -85,37 +160,71 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     // paddingTop: 32,
   },
-  photoWrapper: {
-    // position: "relative",
-  },
-  photo: {
-    position: "relative",
-    width: 341,
+  camera: {
+    // flex: 1,
     height: 240,
+    marginTop: 20,
+    alignItems: "center",
+    // justifyContent: "center",
+    // marginHorizontal: 16,
+  },
+
+  photoView: {
+    flex: 1,
+    // backgroundColor: "transparent",
+    // backfaceVisibility: "blue",
+
+    justifyContent: "flex-end",
     borderRadius: 8,
     borderColor: "#E8E8E8",
     borderWidth: 1,
     backgroundColor: "#F6F6F6",
-    marginRight: "auto",
-    marginLeft: "auto",
+    width: "100%",
   },
+  takePhotoContainer: {
+    position: "absolute",
+    top: 150,
+    left: 10,
+    borderColor: "#fff",
+    borderWidth: 1,
+    zIndex: 100,
+  },
+
   photoTitle: {
-    fontFamily: "Roboto-Medium",
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     color: "#BDBDBD",
     marginTop: 8,
   },
   iconWrapper: {
     position: "absolute",
-    bottom: 120,
-    left: 150,
+    bottom: 90,
+    // left: 150,
+    position: "relative",
+    alignSelf: "center",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    // backgroundColor: photo ? "rgba(225,225,225,0.3)" : "#FFF",
     width: 60,
     height: 60,
     borderRadius: 60,
+  },
+  form: {
+    marginTop: 32,
+  },
+  input: {
+    // borderWidth: 1,
+
+    // backgroundColor: "#F6F6F6",
+    height: 50,
+    paddingTop: 16,
+    paddingBottom: 16,
+    borderBottomColor: "#E8E8E8",
+    borderBottomWidth: 1,
+    color: "#212121",
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
   },
   btn: {
     height: 51,
@@ -123,48 +232,31 @@ const styles = StyleSheet.create({
     marginTop: 43,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F6F6F6",
+    // backgroundColor: "#F6F6F6",
     borderColor: "transparent",
   },
   btnTitle: {
     marginHorizontal: 20,
     fontSize: 16,
     fontFamily: "Roboto-Regular",
-    color: "#BDBDBD",
+    // color: "#BDBDBD",
   },
-
-  // image: {
-  //   flex: 1,
-  //   resizeMode: "cover",
-  //   width: Dimensions.get("window").width,
-  //   height: Dimensions.get("window").height,
-  //   position: "absolute",
-  //   top: 0,
-  //   left: 0,
-  //   right: 0,
-  //   bottom: 0,
-  //   zIndex: -1,
-  // },
-  // wrapper: {
-  //   backgroundColor: "#fff",
-  //   borderTopLeftRadius: 25,
-  //   borderTopRightRadius: 25,
-  // },
-
-  // header: {
-  //   alignItems: "center",
-  //   marginTop: 92,
-  //   marginBottom: 32,
-  // },
-
-  // deleteIcon: {
-  //   position: "absolute",
-  //   right: 128,
-  //   top: 18,
-  // },
-  // logOutIcon: {
-  //   position: "absolute",
-  //   right: 16,
-  //   top: 22,
-  // },
+  trashSvgWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 60,
+    marginBottom: 9,
+    marginLeft: "auto",
+    marginRight: "auto",
+    borderRadius: 20,
+    backgroundColor: "#F6F6F6",
+    width: 70,
+    height: 40,
+  },
+  magPinSvg: {
+    position: "absolute",
+    top: 77,
+    left: 2,
+  },
 });
