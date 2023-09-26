@@ -36,14 +36,30 @@ export default function CreatePostsScreen() {
     })();
   }, []);
 
-  useEffect(() => {
-    async () => {
-      let { status } = await Location.requestBackgroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
+  // useEffect(() => {
+  //   (async () => {
+  //     const { status } = await Location.requestBackgroundPermissionsAsync();
+  //     console.log("status location", status);
+  //     if (status !== "granted") {
+  //       console.log("Permission to access location was denied");
+  //     }
+  //   })();
+  // }, []);
+
+  const sendPost = async () => {
+    const location = await Location.getCurrentPositionAsync(
+      {
+        accuracy: Location.Accuracy.Highest,
+        maximumAge: 10000,
       }
-    };
-  });
+
+      // {}
+    );
+    console.log("latitude", location.coords.latitude);
+    console.log("longitude", location.coords.longitude);
+    // console.log("Sending");
+    navigation.navigate("Posts", { photo, name });
+  };
 
   if (hasPermission === null) {
     return <View />;
@@ -75,10 +91,10 @@ export default function CreatePostsScreen() {
               // console.log(cameraRef);
               if (cameraRef) {
                 const { uri } = await cameraRef.takePictureAsync();
-                const location = await Location.getCurrentPositionAsync();
+                // const location = await Location.getCurrentPositionAsync();
 
                 await MediaLibrary.createAssetAsync(uri);
-                console.log("location", location);
+                // console.log("location", location);
                 setPhoto(uri);
               }
             }}
@@ -132,9 +148,7 @@ export default function CreatePostsScreen() {
             backgroundColor: photo ? "#FF6C00" : "#F6F6F6",
           }}
           activeOpacity={0.8}
-          onPress={() => {
-            navigation.navigate("Posts", { photo, name });
-          }}
+          onPress={sendPost}
         >
           <Text
             style={{ ...styles.btnTitle, color: photo ? "#FFF" : "#BDBDBD" }}
