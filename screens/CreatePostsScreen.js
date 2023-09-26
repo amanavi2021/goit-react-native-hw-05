@@ -36,15 +36,16 @@ export default function CreatePostsScreen() {
     })();
   }, []);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const { status } = await Location.requestBackgroundPermissionsAsync();
-  //     console.log("status location", status);
-  //     if (status !== "granted") {
-  //       console.log("Permission to access location was denied");
-  //     }
-  //   })();
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      // const { status } = await Location.requestBackgroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      console.log("status location", status);
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+    })();
+  }, []);
 
   const sendPost = async () => {
     const location = await Location.getCurrentPositionAsync(
@@ -58,7 +59,7 @@ export default function CreatePostsScreen() {
     console.log("latitude", location.coords.latitude);
     console.log("longitude", location.coords.longitude);
     // console.log("Sending");
-    navigation.navigate("Posts", { photo, name });
+    navigation.navigate("Posts", { photo, name, location });
   };
 
   if (hasPermission === null) {
@@ -139,6 +140,7 @@ export default function CreatePostsScreen() {
             }}
             placeholder="Місцевість.."
             placeholderTextColor={"#BDBDBD"}
+            onChangeText={(value) => setLocation(value)}
           />
         </View>
         <MagPinSvg style={styles.magPinSvg} />
