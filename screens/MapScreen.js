@@ -13,8 +13,6 @@ export default function MapScreen({ route }) {
   }, [route.params]);
   console.log("route", route);
   console.log("coords", coords);
-  // let latitude = coords.latitude;
-  // let longitude = coords.longitude;
 
   return (
     <View style={styles.container}>
@@ -34,6 +32,8 @@ export default function MapScreen({ route }) {
           coordinate={{
             latitude: coords.latitude,
             longitude: coords.longitude,
+            // latitude: 50.516339,
+            // longitude: 30.602185,
           }}
           title="photo was here"
         />
@@ -45,10 +45,6 @@ export default function MapScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // height: 300,
-    // width: 400,
-    // justifyContent: "center",
-    // alignItems: "center",
   },
   mapView: {
     flex: 1,

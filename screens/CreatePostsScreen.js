@@ -50,14 +50,15 @@ export default function CreatePostsScreen() {
   }, []);
 
   const sendPost = async () => {
-    const location = await Location.getCurrentPositionAsync(
-      {
-        accuracy: Location.Accuracy.Highest,
-        maximumAge: 10000,
-      }
+    const location = await Location
+      .getCurrentPositionAsync
+      // {
+      //   accuracy: Location.Accuracy.Highest,
+      //   maximumAge: 10000,
+      // }
 
       // {}
-    );
+      ();
     console.log("latitude", location.coords.latitude);
     console.log("longitude", location.coords.longitude);
     setLatitude(location.coords.latitude);

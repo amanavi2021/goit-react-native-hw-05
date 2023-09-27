@@ -21,7 +21,6 @@ export default function ProfileScreen() {
       <View style={styles.wrapper}>
         <View style={styles.avatarWrapper}>
           <Image style={styles.avatar} source={AvatarImage} />
-          {/* <AddSvg style={styles.addIcon} width={25} height={25} /> */}
           <DeleteSvg style={styles.deleteIcon} width={37} height={37} />
           <TouchableOpacity
             activeOpacity={0.8}

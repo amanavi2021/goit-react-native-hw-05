@@ -12,8 +12,6 @@ import MapSvg from "../assets/images/map-pin.svg";
 import MessageSvg from "../assets/images/message-circle.svg";
 
 export default function PostsScreen({ route }) {
-  // console.log("from create", route.params);
-
   const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
 
@@ -72,25 +70,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingLeft: 16,
     paddingRight: 16,
-    // marginHorizontal: 16,
-    // justifyContent: "flex-end",
   },
   postWrapper: {
     marginBottom: 10,
     marginTop: 32,
     justifyContent: "center",
-    // alignItems: "center",
   },
 
   photo: {
-    // marginHorizontal: 10,
     height: 240,
-    // width: 350,
     borderRadius: 8,
   },
-  // photoTitleWrapper: {
-  //   justifyContent: "flex-start",
-  // },
+
   photoTitle: {
     marginTop: 8,
     fontFamily: "Roboto-Medium",

@@ -41,10 +41,6 @@ export default function Home() {
           display: "none",
         },
       })}
-      // tabBarOptions={{
-      //   activeTintColor: "tomato",
-      //   inactiveTintColor: "gray",
-      // }}
     >
       <Tabs.Screen
         name="Posts"

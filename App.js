@@ -11,7 +11,6 @@ import MapScreen from "./screens/MapScreen";
 // import PostsScreen from "./screens/PostsScreen";
 import Home from "./screens/Home";
 // import AddSvg from "./assets/images/add.svg";
-import ArrowSvg from "./assets/images/arrow-left.svg";
 
 export default function App() {
   const [fontLoaded] = useFonts({
@@ -68,25 +67,6 @@ export default function App() {
             headerShown: false,
           }}
         />
-        {/* <MainStack.Screen
-          name="Posts"
-          component={PostsScreen}
-          options={{
-            title: "Публікації",
-            headerTintColor: "#212121",
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              fontSize: 17,
-            },
-            headerRight: () => (
-              <LogOutSvg
-                style={{ position: "absolute", right: 10, bottom: 10 }}
-                width={25}
-                height={25}
-              />
-            ),
-          }}
-        /> */}
       </MainStack.Navigator>
     </NavigationContainer>
   );
