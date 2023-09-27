@@ -22,6 +22,8 @@ export default function CreatePostsScreen() {
   const [photo, setPhoto] = useState(null);
   const [name, setName] = useState("");
   const [place, setPlace] = useState(null);
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
 
   const navigation = useNavigation();
 
@@ -58,8 +60,15 @@ export default function CreatePostsScreen() {
     );
     console.log("latitude", location.coords.latitude);
     console.log("longitude", location.coords.longitude);
+    setLatitude(location.coords.latitude);
+    setLongitude(location.coords.longitude);
     // console.log("Sending");
-    navigation.navigate("Posts", { photo, name, place });
+    // navigation.navigate("DefaultScreen", { photo, name, place });
+    // navigation.navigate("Posts", {
+    //   screen: "DefaultScreen",
+    //   params: { photo, name, place },
+    // });
+    navigation.navigate("Posts", { photo, name, place, latitude, longitude });
   };
 
   if (hasPermission === null) {

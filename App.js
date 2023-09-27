@@ -1,15 +1,17 @@
 import "react-native-gesture-handler";
 import React from "react";
-// import { StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
 import RegistrationScreen from "./screens/RegistrationScreen";
 import LoginScreen from "./screens/LoginScreen";
+import CommentsScreen from "./screens/CommentsScreen";
+import MapScreen from "./screens/MapScreen";
 // import PostsScreen from "./screens/PostsScreen";
 import Home from "./screens/Home";
 // import AddSvg from "./assets/images/add.svg";
-import LogOutSvg from "./assets/images/log-out.svg";
+import ArrowSvg from "./assets/images/arrow-left.svg";
 
 export default function App() {
   const [fontLoaded] = useFonts({
@@ -49,7 +51,19 @@ export default function App() {
         />
         <MainStack.Screen
           name="Comments"
-          component={Home}
+          component={CommentsScreen}
+          options={{
+            title: "Коментарі",
+            headerTintColor: "#212121",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontSize: 17,
+            },
+          }}
+        />
+        <MainStack.Screen
+          name="Map"
+          component={MapScreen}
           options={{
             headerShown: false,
           }}
@@ -77,3 +91,11 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  arrowSvg: {
+    position: "absolute",
+    left: -370,
+    top: -12,
+  },
+});

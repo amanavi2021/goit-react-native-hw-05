@@ -8,10 +8,10 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import MapSvg from "../assets/images/map-pin.svg";
-import MessageSvg from "../assets/images/message-circle.svg";
+import MapSvg from "../../assets/images/map-pin.svg";
+import MessageSvg from "../../assets/images/message-circle.svg";
 
-export default function PostsScreen({ route }) {
+export default function DefaultScreen({ route }) {
   // console.log("from create", route.params);
 
   const [posts, setPosts] = useState([]);
@@ -45,17 +45,7 @@ export default function PostsScreen({ route }) {
                 <Text style={styles.commentsCount}>0</Text>
               </View>
               <View style={styles.locationWrapper}>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() =>
-                    navigation.navigate("Map", {
-                      latitude: item.latitude,
-                      longitude: item.longitude,
-                    })
-                  }
-                >
-                  <MapSvg />
-                </TouchableOpacity>
+                <MapSvg />
                 <Text style={styles.location}>{item.place}</Text>
               </View>
             </View>

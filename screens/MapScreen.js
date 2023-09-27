@@ -1,11 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { enableLatestRenderer } from "react-native-maps";
 
-export default function MapScreen() {
+export default function MapScreen({ route }) {
+  enableLatestRenderer();
+  const [coords, setCoords] = useState({});
+  useEffect(() => {
+    if (route.params) {
+      setCoords(route.params);
+    }
+  }, [route.params]);
+  console.log("route", route);
+  console.log("coords", coords);
+  // let latitude = coords.latitude;
+  // let longitude = coords.longitude;
+
   return (
     <View style={styles.container}>
-      <Text>Map screen</Text>
+      <MapView
+        style={styles.mapView}
+        provider={PROVIDER_GOOGLE}
+        initialRegion={{
+          // latitude: 50.516339,
+          // longitude: 30.602185,
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.006,
+        }}
+      >
+        <Marker
+          coordinate={{
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          }}
+          title="photo was here"
+        />
+      </MapView>
     </View>
   );
 }
@@ -13,7 +45,14 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    // height: 300,
+    // width: 400,
+    // justifyContent: "center",
+    // alignItems: "center",
+  },
+  mapView: {
+    flex: 1,
+    justifyContent: "flex-end",
     alignItems: "center",
   },
 });
