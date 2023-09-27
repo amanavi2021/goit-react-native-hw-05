@@ -47,6 +47,13 @@ export default function App() {
             headerShown: false,
           }}
         />
+        <MainStack.Screen
+          name="Comments"
+          component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
         {/* <MainStack.Screen
           name="Posts"
           component={PostsScreen}

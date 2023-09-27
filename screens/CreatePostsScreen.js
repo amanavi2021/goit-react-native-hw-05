@@ -21,7 +21,7 @@ export default function CreatePostsScreen() {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [photo, setPhoto] = useState(null);
   const [name, setName] = useState("");
-  const [location, setLocation] = useState(null);
+  const [place, setPlace] = useState(null);
 
   const navigation = useNavigation();
 
@@ -59,7 +59,7 @@ export default function CreatePostsScreen() {
     console.log("latitude", location.coords.latitude);
     console.log("longitude", location.coords.longitude);
     // console.log("Sending");
-    navigation.navigate("Posts", { photo, name, location });
+    navigation.navigate("Posts", { photo, name, place });
   };
 
   if (hasPermission === null) {
@@ -75,14 +75,16 @@ export default function CreatePostsScreen() {
       <Camera style={styles.camera} type={type} ref={setCameraRef}>
         {photo && (
           <View style={styles.takePhotoContainer}>
-            <Image
-              source={{ uri: photo }}
-              style={{ height: 200, width: 200 }}
-            />
+            <Image source={{ uri: photo }} style={{ height: 240 }} />
           </View>
         )}
 
-        <View style={styles.photoView}>
+        <View
+          style={{
+            ...styles.photoView,
+            backgroundColor: photo ? "transparent" : "#F6F6F6",
+          }}
+        >
           <TouchableOpacity
             style={{
               ...styles.iconWrapper,
@@ -140,7 +142,7 @@ export default function CreatePostsScreen() {
             }}
             placeholder="Місцевість.."
             placeholderTextColor={"#BDBDBD"}
-            onChangeText={(value) => setLocation(value)}
+            onChangeText={(value) => setPlace(value)}
           />
         </View>
         <MagPinSvg style={styles.magPinSvg} />
@@ -194,16 +196,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: "#E8E8E8",
     borderWidth: 1,
-    backgroundColor: "#F6F6F6",
+    // backgroundColor: "#F6F6F6",
     width: "100%",
   },
   takePhotoContainer: {
     position: "absolute",
-    top: 150,
-    left: 10,
-    borderColor: "#fff",
-    borderWidth: 1,
-    zIndex: 100,
+    top: 0,
+    // left: 10,
+    // borderColor: "red",
+    // borderWidth: 2,
+    // zIndex: 100,
+    width: "100%",
   },
 
   photoTitle: {
